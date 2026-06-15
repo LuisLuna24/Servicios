@@ -1,0 +1,307 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+
+// 1. Array de Módulos Gastronómicos
+const modules = [
+  { id: "dashboard", title: "Dashboard", description: "Métricas de ventas, ticket promedio y afluencia.", icono: "dashboard", price: 0 },
+  { id: "pos", title: "Punto de Venta (POS)", description: "Toma de pedidos rápida para salón y para llevar.", icono: "point_of_sale", price: 100 },
+  { id: "mesas", title: "Gestión de Mesas", description: "Mapa de mesas interactivo, unión y división de cuentas.", icono: "table_restaurant", price: 80 },
+  { id: "kds", title: "Monitor de Cocina (KDS)", description: "Pantallas de producción para chefs y control de tiempos.", icono: "kitchen", price: 120 },
+  { id: "menu_qr", title: "Menú Digital QR", description: "Menú interactivo con actualizaciones en tiempo real.", icono: "qr_code_scanner", price: 70 },
+  { id: "recetas", title: "Recetas e Insumos", description: "Control de inventario, escandallos y costo por platillo.", icono: "inventory_2", price: 150 },
+  { id: "facturacion", title: "Facturación Auto-servicio", description: "Portal para que los comensales generen su factura.", icono: "receipt_long", price: 80 },
+  { id: "delivery", title: "Delivery / Para Llevar", description: "Integración de pedidos a domicilio y recolección.", icono: "delivery_dining", price: 100 },
+  { id: "reservaciones", title: "Reservaciones", description: "Agenda de mesas, lista de espera y confirmaciones.", icono: "book_online", price: 80 },
+  { id: "personal", title: "Meseros y Propinas", description: "Control de turnos, cortes de caja y reparto de propinas.", icono: "payments", price: 70 },
+  { id: "mermas", title: "Control de Mermas", description: "Registro de desperdicios, caducidad e invitaciones.", icono: "delete_sweep", price: 80 },
+  { id: "multi_sucursal", title: "Multi-Sucursal", description: "Gestión centralizada para franquicias o varias marcas.", icono: "store", price: 120 },
+  { id: "reportes", title: "Reportes Financieros", description: "Análisis de platillos estrella, rentabilidad y ventas.", icono: "trending_up", price: 150 },
+];
+
+const pricingPlans = [
+  {
+    tag: "01 / CAFETERÍA",
+    name: "FAST FOOD BASIC",
+    monthlyPrice: 250,
+    yearlyPrice: 200,
+    isPopular: false,
+    features: [
+      "1 Caja / 1 Sucursal",
+      "Punto de Venta (POS)",
+      "Menú Digital QR",
+      "Gestión de turnos básica",
+      "Soporte por correo electrónico"
+    ],
+    buttonText: "Seleccionar",
+    style: "secondary",
+  },
+  {
+    tag: "02 / RESTAURANTE",
+    name: "RESTAURANTE PRO",
+    monthlyPrice: 450,
+    yearlyPrice: 360,
+    isPopular: true,
+    features: [
+      "Plano de Mesas y Comandas",
+      "Monitor de Cocina (KDS)",
+      "Control de Recetas e Insumos",
+      "Facturación y Reservaciones",
+      "Hasta 3 Cajas / Dispositivos",
+      "Soporte prioritario 24/7"
+    ],
+    buttonText: "Comenzar Ahora",
+    style: "primary",
+  },
+  {
+    tag: "03 / FRANQUICIA",
+    name: "FRANQUICIA MASTER",
+    monthlyPrice: 950, 
+    yearlyPrice: 760,
+    isPopular: false,
+    features: [
+      "Sucursales Ilimitadas",
+      "Módulo de Delivery Propio",
+      "Control de Mermas y Costeo",
+      "Gestión de Comisariato",
+      "Reportes de Rentabilidad Global",
+      "Capacitación Presencial/Remota"
+    ],
+    buttonText: "Seleccionar",
+    style: "secondary",
+  },
+];
+---
+
+<Layout title="Software para Restaurantes | FOODSYS">
+  <Navbar />
+  
+  <div x-data="{ 
+    isYearly: false, 
+    selectedModules: [], 
+    showAlert: false,
+    alertPlanName: '',
+    proAlertShown: false,
+    masterAlertShown: false,
+    
+    toggleModule(id) {
+      if (this.selectedModules.includes(id)) {
+        this.selectedModules = this.selectedModules.filter(m => m !== id);
+      } else {
+        this.selectedModules.push(id);
+        
+        let total = this.currentTotal;
+        
+        // Alerta escalable: Sugerir MASTER si pasa los $950, o PRO si pasa los $450
+        if (total >= 950 && !this.masterAlertShown) {
+          this.alertPlanName = 'FRANQUICIA MASTER';
+          this.showAlert = true;
+          this.masterAlertShown = true;
+        } else if (total >= 450 && total < 950 && !this.proAlertShown) {
+          this.alertPlanName = 'RESTAURANTE PRO';
+          this.showAlert = true;
+          this.proAlertShown = true;
+        }
+      }
+    },
+    get currentTotal() {
+      // Diccionario de precios de los módulos gastronómicos
+      const precios = {
+        dashboard: 0, pos: 100, mesas: 80, kds: 120, menu_qr: 70,
+        recetas: 150, facturacion: 80, delivery: 100, reservaciones: 80,
+        personal: 70, mermas: 80, multi_sucursal: 120, reportes: 150
+      };
+      return this.selectedModules.reduce((sum, id) => sum + (precios[id] || 0), 0);
+    }
+  }" class="min-h-screen pt-20">
+
+    <div 
+      x-show="showAlert" 
+      x-transition.opacity
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      x-cloak
+    >
+      <div @click.away="showAlert = false" class="bg-[var(--color-surface-container-low)] border border-primary/30 p-8 max-w-md w-full text-center rounded-none shadow-2xl">
+        <span class="material-symbols-outlined text-primary text-5xl mb-4">restaurant</span>
+        <h3 class="font-headline-md text-xl uppercase mb-2 text-white">¡Mejora tu Rentabilidad!</h3>
+        <p class="font-body-md text-on-surface-variant mb-6 text-sm">
+          Tu selección de módulos está alcanzando el costo del plan <strong class="text-primary" x-text="alertPlanName"></strong>. Te sugerimos optar por este paquete para desbloquear funciones vitales como el KDS y Control de Insumos sin pagar extras por separado.
+        </p>
+        <div class="flex flex-col gap-2">
+          <button @click="showAlert = false" class="bg-primary text-[var(--color-surface)] py-3 font-label-caps text-xs uppercase hover:opacity-90 transition-all">
+            Seguir con mi plan a medida
+          </button>
+          <button @click="showAlert = false; document.getElementById('pricing-section').scrollIntoView({behavior: 'smooth'})" class="border border-white/20 hover:bg-white hover:text-black py-3 font-label-caps text-xs uppercase transition-all">
+            Ver planes estructurados
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <main>
+      <section class="relative pt-32 pb-20 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto overflow-hidden">
+        <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/5 blur-[120px] rounded-full"></div>
+
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+          <div class="max-w-4xl">
+            <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant mb-4 block">
+              GESTIÓN GASTRONÓMICA / {new Date().getFullYear()}
+            </span>
+            <h1 class="font-display-lg text-[length:var(--text-display-lg-mobile)] md:text-[length:var(--text-display-lg)] uppercase leading-none">
+              PUNTO DE VENTA &amp;<br />RESTAURANTES
+            </h1>
+          </div>
+
+          <div class="max-w-xs text-right hidden md:block">
+            <p class="font-body-md text-[length:var(--text-body-md)] text-on-surface-variant">
+              TECNOLOGÍA DISEÑADA PARA ACELERAR EL SERVICIO, EVITAR FUGAS DE INVENTARIO Y MEJORAR LA EXPERIENCIA DE TUS COMENSALES.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing-section" class="px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto mb-40">
+        
+        <div class="flex justify-center mb-16">
+          <div class="flex items-center gap-4 bg-[var(--color-surface-container-low)] p-2 rounded-lg border border-white/5">
+            <span class="font-label-caps text-[length:var(--text-label-caps)]" :class="!isYearly ? 'text-primary' : 'text-on-surface-variant'">
+              MENSUAL
+            </span>
+
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" x-model="isYearly" class="sr-only peer" />
+              <div class="w-11 h-6 bg-[var(--color-surface-variant)] rounded-full peer-checked:bg-primary transition-colors"></div>
+              <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform" :class="isYearly ? 'translate-x-5' : ''"></div>
+            </label>
+
+            <span class="font-label-caps text-[length:var(--text-label-caps)]" :class="isYearly ? 'text-primary' : 'text-on-surface-variant'">
+              ANUAL (SAVE 20%)
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-[1px] bg-white/10 border border-white/10">
+          {pricingPlans.map((plan) => (
+            <div
+              class={`p-12 flex flex-col h-full transition-colors relative overflow-hidden 
+                ${plan.style === 'primary' ? 'bg-[var(--color-surface-container-low)] hover:bg-[var(--color-surface-container)]' : 'bg-[var(--color-surface)] border-r border-white/5 md:border-r-0 hover:bg-[#1a1a1a]'}`}
+            >
+              {plan.isPopular && (
+                <div class="absolute top-0 right-0 bg-primary text-[var(--color-surface)] px-4 py-1 font-label-caps text-[10px]">
+                  MÁS ELEGIDO
+                </div>
+              )}
+
+              <span class={`font-label-caps text-[length:var(--text-label-caps)] mb-2 ${plan.style === 'primary' ? 'text-primary' : 'text-on-surface-variant'}`}>
+                {plan.tag}
+              </span>
+              <h3 class="font-headline-md text-[length:var(--text-headline-md)] mb-8 uppercase">
+                {plan.name}
+              </h3>
+
+              <div class="text-[length:var(--text-display-lg-mobile)] font-headline-md mb-8">
+                <span x-text={`isYearly ? '$${plan.yearlyPrice}' : '$${plan.monthlyPrice}'`}>
+                  ${plan.monthlyPrice}
+                </span>
+                <span class="text-[length:var(--text-label-caps)] text-on-surface-variant font-body-md">/MES</span>
+              </div>
+
+              <ul class={`space-y-4 mb-12 flex-grow font-body-md text-[length:var(--text-body-md)] ${plan.style === 'primary' ? 'text-on-surface' : 'text-on-surface-variant'}`}>
+                {plan.features.map((feature) => (
+                  <li class="flex items-center gap-2">
+                    <span class={`material-symbols-outlined text-sm ${plan.style === 'primary' ? 'text-primary' : ''}`}>
+                      check
+                    </span> 
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                class={`w-full py-4 font-label-caps text-[length:var(--text-label-caps)] transition-all uppercase 
+                  ${plan.style === 'primary' ? 'bg-primary text-[var(--color-surface)] hover:opacity-90' : 'border border-white/20 hover:bg-white hover:text-black'}`}
+              >
+                {plan.buttonText}
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] py-32 max-w-[var(--spacing-container-max)] mx-auto border-t border-white/10">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+          <div>
+            <h2 class="font-headline-lg text-[length:var(--text-headline-lg)] mb-4 uppercase">
+              ARMA TU COCINA DIGITAL
+            </h2>
+            <p class="font-body-lg text-[length:var(--text-body-lg)] text-on-surface-variant max-w-lg">
+              SELECCIONA SOLO LOS MÓDULOS QUE SE ADAPTEN AL ESTILO Y TAMAÑO DE TU NEGOCIO GASTRONÓMICO.
+            </p>
+          </div>
+          <div class="flex items-center gap-4 border border-white/10 p-4">
+            <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant">
+              TOTAL ESTIMADO:
+            </span>
+            <span
+              class="font-headline-md text-[length:var(--text-headline-md)] transition-transform duration-200"
+              :class="currentTotal > 0 ? 'scale-110 text-primary' : ''"
+              x-text="`$${currentTotal}`"
+            >$0</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-[var(--spacing-gutter)]">
+          {modules.map((module) => (
+            <div
+              @click={`toggleModule('${module.id}')`}
+              :class={`selectedModules.includes('${module.id}') ? 'border-primary bg-[var(--color-surface-container-low)]' : 'border border-white/10'`}
+              class="p-8 hover:border-white/50 hover:bg-[#1a1a1a] transition-all cursor-pointer group"
+            >
+              <div class="flex justify-between mb-8">
+                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
+                  {module.icono}
+                </span>
+                <span class="font-label-caps text-[length:var(--text-label-caps)] opacity-40">
+                  + ${module.price}
+                </span>
+              </div>
+              <h3 class="font-headline-md text-[length:var(--text-headline-md)] mb-4 uppercase">
+                {module.title}
+              </h3>
+              <p class="font-body-md text-[length:var(--text-body-md)] text-on-surface-variant mb-8">
+                {module.description}
+              </p>
+              <div class="flex justify-between items-center">
+                <span x-text={`selectedModules.includes('${module.id}') ? 'SELECCIONADO' : 'AÑADIR'`} class="font-label-caps text-[length:var(--text-label-caps)]">
+                  AÑADIR
+                </span>
+                <span x-show={`selectedModules.includes('${module.id}')`} class="material-symbols-outlined text-primary" x-cloak>
+                  check_circle
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mb-40 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)]">
+        <div class="max-w-[var(--spacing-container-max)] mx-auto bg-primary text-[var(--color-surface)] p-20 text-center relative overflow-hidden">
+          <h2 class="font-display-lg-mobile md:font-display-lg text-[length:var(--text-display-lg-mobile)] md:text-[length:var(--text-display-lg)] mb-12 uppercase relative z-10">
+            CONTROLA TU RESTAURANTE HOY
+          </h2>
+          <button class="bg-[var(--color-surface)] text-primary px-12 py-6 font-label-caps text-[length:var(--text-label-caps)] uppercase hover:opacity-90 transition-all active:scale-95 relative z-10">
+            Agendar Demo Gastronómica
+          </button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  
+  <Footer />
+</Layout>
+
+<style>
+  [x-cloak] { display: none !important; }
+</style>

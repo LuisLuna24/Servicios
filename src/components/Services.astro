@@ -1,0 +1,115 @@
+---
+// src/components/Services.astro
+
+const services = [
+  {
+    id: "01",
+    icon: "language",
+    title: "Desarrollo Web",
+    description:
+      "Plataformas ultra-rápidas diseñadas con los frameworks más robustos del mercado actual.",
+    href: "/servicios/desarrollo-web",
+  },
+  {
+    id: "02",
+    icon: "inventory_2",
+    title: "Inventario / POS",
+    description:
+      "Control total sobre tus activos y ventas con sistemas de gestión centralizada de alta precisión.",
+    href: "/servicios/inventario-pos",
+  },
+  {
+    id: "03",
+    icon: "medical_services",
+    title: "Citas Médicas",
+    description:
+      "Flujos de trabajo optimizados para clínicas y especialistas que valoran el tiempo del paciente.",
+    href: "/servicios/citas-medicas",
+  },
+  {
+    id: "04",
+    icon: "pets",
+    title: "Veterinarias",
+    description:
+      "Gestión integral de historias clínicas y calendarios de vacunación automatizados.",
+    href: "/servicios/citas-veterinarias",
+  },
+  {
+    id: "05",
+    icon: "restaurant",
+    title: "Restaurantes",
+    description:
+      "Sincronización perfecta entre cocina y sala para una experiencia gastronómica impecable.",
+    href: "/servicios/gestion-restaurantes",
+  },
+  {
+    id: "06",
+    icon: "all_inclusive",
+    title: "Citas Generales",
+    description:
+      "Arquitecturas personalizadas para salones, talleres y centros de servicio.",
+    href: "/servicios/citas-generales",
+  },
+];
+---
+
+<section
+  class="py-32 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto border-t border-white/10"
+  id="services"
+>
+  <div
+    class="flex flex-col md:flex-row justify-between items-start md:items-end mb-20 gap-8"
+  >
+    <div>
+      <p
+        class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant mb-4"
+      >
+        NUESTRA EXPERIENCIA
+      </p>
+      <h2
+        class="font-headline-lg text-[length:var(--text-headline-lg)] text-primary uppercase"
+      >
+        SERVICIOS DE ÉLITE
+      </h2>
+    </div>
+    <p
+      class="font-body-md text-[length:var(--text-body-md)] text-on-surface-variant max-w-xs text-right hidden md:block"
+    >
+      SOLUCIONES ESCALABLES PARA NEGOCIOS QUE DEMANDAN EXCELENCIA TÉCNICA.
+    </p>
+  </div>
+
+  <!-- Bento-Inspired Grid -->
+  <div
+    class="grid grid-cols-1 md:grid-cols-3 gap-0 border-t border-l border-white/10"
+  >
+    {
+      services.map((service) => (
+        <a
+          href={service.href}
+          class="p-12 border border-white/10 border-t-0 border-l-0 hover:bg-[#1a1a1a] hover:border-white/40 group transition-all duration-700 ease-out"
+        >
+          <div class="flex justify-between items-start mb-12">
+            <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant">
+              {service.id}
+            </span>
+            <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
+              {service.icon}
+            </span>
+          </div>
+
+          <h3 class="font-headline-md text-[length:var(--text-headline-md)] text-primary mb-4 uppercase">
+            {service.title}
+          </h3>
+          <p class="text-on-surface-variant font-body-md text-[length:var(--text-body-md)] mb-8">
+            {service.description}
+          </p>
+          <div class="flex justify-between items-center space-x-2 font-label-caps text-[length:var(--text-label-caps)] text-primary border-b border-primary/20 hover:border-primary transition-all pb-1">
+            <span>DETALLES</span>
+            <span class="material-symbols-outlined text-sm">arrow_forward</span>
+          </div>
+        </a>
+      ))
+    }
+  </div>
+</section>

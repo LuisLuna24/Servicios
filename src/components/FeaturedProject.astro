@@ -1,0 +1,38 @@
+---
+// src/components/FeaturedProject.astro
+---
+
+<section class="py-32 grid grid-cols-1 md:grid-cols-2 gap-0 border-t border-b border-white/10">
+  <div class="bg-[var(--color-surface-container)] flex flex-col justify-center p-[var(--spacing-margin-mobile)] md:p-[var(--spacing-margin-desktop)] border-r border-white/10">
+    <h2 class="font-headline-lg text-[length:var(--text-headline-lg)] text-primary mb-8 uppercase leading-tight">DISEÑAMOS EL FUTURO DE TU EMPRESA</h2>
+    
+    <p class="font-body-lg text-[length:var(--text-body-lg)] text-on-surface-variant mb-12 max-w-lg">
+      En LunaWeb, creemos que la simplicidad es la máxima sofisticación. Nuestros diseños eliminan el ruido para enfocar al usuario en lo que realmente importa: los resultados.
+    </p>
+    
+    <div class="space-y-4">
+      <div class="flex items-center space-x-4 group cursor-pointer">
+        <div class="w-2 h-2 bg-primary rounded-full group-hover:scale-150 transition-transform"></div>
+        <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant group-hover:text-primary transition-colors">ESTRATEGIA TÉCNICA</span>
+      </div>
+      
+      <div class="flex items-center space-x-4 group cursor-pointer">
+        <div class="w-2 h-2 bg-primary rounded-full group-hover:scale-150 transition-transform"></div>
+        <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant group-hover:text-primary transition-colors">DISEÑO DE INTERFAZ</span>
+      </div>
+      
+      <div class="flex items-center space-x-4 group cursor-pointer">
+        <div class="w-2 h-2 bg-primary rounded-full group-hover:scale-150 transition-transform"></div>
+        <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant group-hover:text-primary transition-colors">DESPLIEGUE SEGURO</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="relative overflow-hidden min-h-[400px] md:min-h-full">
+    <img 
+      alt="Minimalist Tech Architecture" 
+      class="absolute inset-0 w-full h-full object-cover filter grayscale opacity-60 hover:scale-110 transition-transform duration-1000" 
+      src="https://lh3.googleusercontent.com/aida-public/AB6AXuDEEkOfLGCHS2uQU5WciWktAChkbsottvO-9cH74FNlgaG9oSScFJwGIdEYxwYh8TExMOuDRSLJHi41PkteJ2NV3y7M_m87bQ-atzgbvgrCjuMDptWZEjNOPoTPNzkHpe2bkGNBQun8frMiEpnEfshpaXijqQVl0qX41ti3JT34bmGMsFgTfnKfyazb1SgBSROqWcrG-mi0QlEA2iT8KgM_hsb6c7hHB1TzyI8DlBsNRUOxjFkYkAFayrTOkA6cKfsFcH7uAFNJYupv"
+    />
+  </div>
+</section>

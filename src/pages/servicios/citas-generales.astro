@@ -1,0 +1,296 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import Navbar from "../../components/Navbar.astro";
+import Footer from "../../components/Footer.astro";
+
+// 1. Array de Módulos Universales y Económicos
+const modules = [
+  { id: "dashboard", title: "Panel Base", description: "Vista de tus citas del día e ingresos básicos.", icono: "dashboard", price: 0 },
+  { id: "agenda", title: "Agenda Digital", description: "Calendario interactivo para organizar tus horarios.", icono: "calendar_today", price: 30 },
+  { id: "sitio_web", title: "Página de Reservas", description: "Link personalizado para que tus clientes agenden solos.", icono: "language", price: 35 },
+  { id: "notificaciones", title: "Avisos Automáticos", description: "Recordatorios por correo y SMS para evitar olvidos.", icono: "sms", price: 20 },
+  { id: "link_pago", title: "Pagos en Línea", description: "Acepta anticipos o pagos completos con tarjeta.", icono: "credit_card", price: 25 },
+  { id: "equipo", title: "Multi-Personal", description: "Suma los calendarios y horarios de tus empleados.", icono: "badge", price: 25 },
+  { id: "clientes", title: "Base de Clientes", description: "Directorio con el historial de citas y contacto.", icono: "groups", price: 15 },
+  { id: "reportes", title: "Reportes Básicos", description: "Estadísticas simples de tus servicios más vendidos.", icono: "bar_chart", price: 15 },
+];
+
+const pricingPlans = [
+  {
+    tag: "01 / INDIVIDUAL",
+    name: "EMPRENDEDOR",
+    monthlyPrice: 50,
+    yearlyPrice: 40,
+    isPopular: false,
+    features: [
+      "1 Usuario / Calendario único",
+      "Agenda de Citas Manual",
+      "Base de Clientes básica",
+      "Soporte por correo electrónico"
+    ],
+    buttonText: "Comenzar Gratis",
+    style: "secondary",
+  },
+  {
+    tag: "02 / POPULAR",
+    name: "NEGOCIO PRO",
+    monthlyPrice: 150,
+    yearlyPrice: 120,
+    isPopular: true,
+    features: [
+      "Hasta 5 Empleados / Calendarios",
+      "Página de Reservas Online",
+      "Recordatorios Automáticos",
+      "Cobros con Tarjeta integrados",
+      "Soporte rápido por chat"
+    ],
+    buttonText: "Elegir Plan",
+    style: "primary",
+  },
+  {
+    tag: "03 / PREMIUM",
+    name: "EMPRESA MASTER",
+    monthlyPrice: 300, 
+    yearlyPrice: 240,
+    isPopular: false,
+    features: [
+      "Personal y Empleados ilimitados",
+      "Múltiples sucursales o locaciones",
+      "Reportes financieros avanzados",
+      "Prioridad de soporte 24/7"
+    ],
+    buttonText: "Elegir Plan",
+    style: "secondary",
+  },
+];
+---
+
+<Layout title="Sistema de Citas Universal | BOOKLY">
+  <Navbar />
+  
+  <div x-data="{ 
+    isYearly: false, 
+    selectedModules: [], 
+    showAlert: false,
+    alertPlanName: '',
+    proAlertShown: false,
+    masterAlertShown: false,
+    
+    toggleModule(id) {
+      if (this.selectedModules.includes(id)) {
+        this.selectedModules = this.selectedModules.filter(m => m !== id);
+      } else {
+        this.selectedModules.push(id);
+        
+        let total = this.currentTotal;
+        
+        // Alerta inteligente escalada a presupuestos bajos
+        if (total >= 79 && !this.masterAlertShown) {
+          this.alertPlanName = 'EMPRESA MASTER';
+          this.showAlert = true;
+          this.masterAlertShown = true;
+        } else if (total >= 39 && total < 79 && !this.proAlertShown) {
+          this.alertPlanName = 'NEGOCIO PRO';
+          this.showAlert = true;
+          this.proAlertShown = true;
+        }
+      }
+    },
+    get currentTotal() {
+      const precios = {
+        dashboard: 0, agenda: 30, sitio_web: 35, notificaciones: 20,
+        link_pago: 25, equipo: 25, clientes: 15, reportes: 15
+      };
+      return this.selectedModules.reduce((sum, id) => sum + (precios[id] || 0), 0);
+    }
+  }" class="min-h-screen pt-20">
+
+    <div 
+      x-show="showAlert" 
+      x-transition.opacity
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
+      x-cloak
+    >
+      <div @click.away="showAlert = false" class="bg-[var(--color-surface-container-low)] border border-primary/30 p-8 max-w-md w-full text-center rounded-none shadow-2xl">
+        <span class="material-symbols-outlined text-primary text-5xl mb-4">savings</span>
+        <h3 class="font-headline-md text-xl uppercase mb-2 text-white">¡Ahorra Dinero!</h3>
+        <p class="font-body-md text-on-surface-variant mb-6 text-sm">
+          Tus módulos sumados ya igualan o superan el costo del plan completo <strong class="text-primary" x-text="alertPlanName"></strong>. Te sugerimos activar el paquete cerrado para obtener un mejor precio y más funciones incluidas de forma ilimitada.
+        </p>
+        <div class="flex flex-col gap-2">
+          <button @click="showAlert = false" class="bg-primary text-[var(--color-surface)] py-3 font-label-caps text-xs uppercase hover:opacity-90 transition-all">
+            Mantener módulos sueltos
+          </button>
+          <button @click="showAlert = false; document.getElementById('pricing-section').scrollIntoView({behavior: 'smooth'})" class="border border-white/20 hover:bg-white hover:text-black py-3 font-label-caps text-xs uppercase transition-all">
+            Ver planes económicos
+          </button>
+        </div>
+      </div>
+    </div>
+    
+    <main>
+      <section class="relative pt-32 pb-20 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto overflow-hidden">
+        <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/5 blur-[120px] rounded-full"></div>
+
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+          <div class="max-w-4xl">
+            <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant mb-4 block">
+              AGENDA INTELIGENTE PARA TODOS / {new Date().getFullYear()}
+            </span>
+            <h1 class="font-display-lg text-[length:var(--text-display-lg-mobile)] md:text-[length:var(--text-display-lg)] uppercase leading-none">
+              RESERVAS ONLINE &amp;<br />CONTROL DE CITAS
+            </h1>
+          </div>
+
+          <div class="max-w-xs text-right hidden md:block">
+            <p class="font-body-md text-[length:var(--text-body-md)] text-on-surface-variant">
+              LA FORMA MÁS SENCILLA Y ECONÓMICA DE PERMITIR QUE TUS CLIENTES RESERVEN TUS SERVICIOS LAS 24 HORAS DEL DÍA.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="pricing-section" class="px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto mb-40">
+        
+        <div class="flex justify-center mb-16">
+          <div class="flex items-center gap-4 bg-[var(--color-surface-container-low)] p-2 rounded-lg border border-white/5">
+            <span class="font-label-caps text-[length:var(--text-label-caps)]" :class="!isYearly ? 'text-primary' : 'text-on-surface-variant'">
+              MENSUAL
+            </span>
+
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" x-model="isYearly" class="sr-only peer" />
+              <div class="w-11 h-6 bg-[var(--color-surface-variant)] rounded-full peer-checked:bg-primary transition-colors"></div>
+              <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform" :class="isYearly ? 'translate-x-5' : ''"></div>
+            </label>
+
+            <span class="font-label-caps text-[length:var(--text-label-caps)]" :class="isYearly ? 'text-primary' : 'text-on-surface-variant'">
+              ANUAL (AHORRA 20%)
+            </span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-[1px] bg-white/10 border border-white/10">
+          {pricingPlans.map((plan) => (
+            <div
+              class={`p-12 flex flex-col h-full transition-colors relative overflow-hidden 
+                ${plan.style === 'primary' ? 'bg-[var(--color-surface-container-low)] hover:bg-[var(--color-surface-container)]' : 'bg-[var(--color-surface)] border-r border-white/5 md:border-r-0 hover:bg-[#1a1a1a]'}`}
+            >
+              {plan.isPopular && (
+                <div class="absolute top-0 right-0 bg-primary text-[var(--color-surface)] px-4 py-1 font-label-caps text-[10px]">
+                  EL MEJOR PRECIO
+                </div>
+              )}
+
+              <span class={`font-label-caps text-[length:var(--text-label-caps)] mb-2 ${plan.style === 'primary' ? 'text-primary' : 'text-on-surface-variant'}`}>
+                {plan.tag}
+              </span>
+              <h3 class="font-headline-md text-[length:var(--text-headline-md)] mb-8 uppercase">
+                {plan.name}
+              </h3>
+
+              <div class="text-[length:var(--text-display-lg-mobile)] font-headline-md mb-8">
+                <span x-text={`isYearly ? '$${plan.yearlyPrice}' : '$${plan.monthlyPrice}'`}>
+                  ${plan.monthlyPrice}
+                </span>
+                <span class="text-[length:var(--text-label-caps)] text-on-surface-variant font-body-md">/MES</span>
+              </div>
+
+              <ul class={`space-y-4 mb-12 flex-grow font-body-md text-[length:var(--text-body-md)] ${plan.style === 'primary' ? 'text-on-surface' : 'text-on-surface-variant'}`}>
+                {plan.features.map((feature) => (
+                  <li class="flex items-center gap-2">
+                    <span class={`material-symbols-outlined text-sm ${plan.style === 'primary' ? 'text-primary' : ''}`}>
+                      check
+                    </span> 
+                    {feature}
+                  </li>
+                ))}
+              </ul>
+
+              <button
+                class={`w-full py-4 font-label-caps text-[length:var(--text-label-caps)] transition-all uppercase 
+                  ${plan.style === 'primary' ? 'bg-primary text-[var(--color-surface)] hover:opacity-90' : 'border border-white/20 hover:bg-white hover:text-black'}`}
+              >
+                {plan.buttonText}
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] py-32 max-w-[var(--spacing-container-max)] mx-auto border-t border-white/10">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+          <div>
+            <h2 class="font-headline-lg text-[length:var(--text-headline-lg)] mb-4 uppercase">
+              CONFIGURACIÓN A MEDIDA
+            </h2>
+            <p class="font-body-lg text-[length:var(--text-body-lg)] text-on-surface-variant max-w-lg">
+              PAGA ÚNICAMENTE POR LO QUE USAS. SELECCIONA LOS COMPONENTES EXACTOS PARA TU NEGOCIO.
+            </p>
+          </div>
+          <div class="flex items-center gap-4 border border-white/10 p-4">
+            <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant">
+              TOTAL ESTIMADO:
+            </span>
+            <span
+              class="font-headline-md text-[length:var(--text-headline-md)] transition-transform duration-200"
+              :class="currentTotal > 0 ? 'scale-110 text-primary' : ''"
+              x-text="`$${currentTotal}`"
+            >$0</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-[var(--spacing-gutter)]">
+          {modules.map((module) => (
+            <div
+              @click={`toggleModule('${module.id}')`}
+              :class={`selectedModules.includes('${module.id}') ? 'border-primary bg-[var(--color-surface-container-low)]' : 'border border-white/10'`}
+              class="p-8 hover:border-white/50 hover:bg-[#1a1a1a] transition-all cursor-pointer group"
+            >
+              <div class="flex justify-between mb-8">
+                <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
+                  {module.icono}
+                </span>
+                <span class="font-label-caps text-[length:var(--text-label-caps)] opacity-40">
+                  + ${module.price}
+                </span>
+              </div>
+              <h3 class="font-headline-md text-[length:var(--text-headline-md)] mb-4 uppercase">
+                {module.title}
+              </h3>
+              <p class="font-body-md text-[length:var(--text-body-md)] text-on-surface-variant mb-8">
+                {module.description}
+              </p>
+              <div class="flex justify-between items-center">
+                <span x-text={`selectedModules.includes('${module.id}') ? 'SELECCIONADO' : 'AÑADIR'`} class="font-label-caps text-[length:var(--text-label-caps)]">
+                  AÑADIR
+                </span>
+                <span x-show={`selectedModules.includes('${module.id}')`} class="material-symbols-outlined text-primary" x-cloak>
+                  check_circle
+                </span>
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section class="mb-40 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)]">
+        <div class="max-w-[var(--spacing-container-max)] mx-auto bg-primary text-[var(--color-surface)] p-20 text-center relative overflow-hidden">
+          <h2 class="font-display-lg-mobile md:font-display-lg text-[length:var(--text-display-lg-mobile)] md:text-[length:var(--text-display-lg)] mb-12 uppercase relative z-10">
+            COMIENZA A RECIBlR CITAS EN MINUTOS
+          </h2>
+          <button class="bg-[var(--color-surface)] text-primary px-12 py-6 font-label-caps text-[length:var(--text-label-caps)] uppercase hover:opacity-90 transition-all active:scale-95 relative z-10">
+            Crear Cuenta Gratis
+          </button>
+        </div>
+      </section>
+
+    </main>
+  </div>
+  
+  <Footer />
+</Layout>
+
+<style>
+  [x-cloak] { display: none !important; }
+</style>

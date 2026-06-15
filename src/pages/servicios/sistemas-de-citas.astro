@@ -1,0 +1,197 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import Navbar from '../../components/Navbar.astro';
+import Footer from '../../components/Footer.astro';
+---
+
+<Layout title="Sistemas de Citas | LUNAWEB">
+  <Navbar />
+  <main class="relative pt-20">
+    <!-- Grid Background Decor -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden opacity-20 z-0">
+      <div class="grid-line v-line left-1/4"></div>
+      <div class="grid-line v-line left-1/2"></div>
+      <div class="grid-line v-line left-3/4"></div>
+    </div>
+
+    <!-- Hero Section -->
+    <section class="relative z-10 pt-24 pb-40 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto">
+      <div class="flex flex-col gap-8 items-start">
+        <span class="text-on-surface-variant font-label-caps text-[length:var(--text-label-caps)] tracking-[0.3em]">VERSION 4.0 / 2024</span>
+        <h1 class="font-display-lg-mobile md:font-display-lg text-[length:var(--text-display-lg-mobile)] md:text-[length:var(--text-display-lg)] uppercase max-w-4xl text-primary">
+          Sistemas de Citas
+        </h1>
+        <p class="font-body-lg text-[length:var(--text-body-lg)] text-on-surface-variant max-w-2xl">
+          Arquitectura digital de alta precisión para la gestión de turnos. Una solución unificada diseñada para entornos médicos, veterinarios y comerciales que exigen eficiencia quirúrgica.
+        </p>
+        <div class="h-[1px] w-full bg-white/10 mt-12"></div>
+      </div>
+    </section>
+
+    <!-- Use Cases Bento Grid -->
+    <section class="py-20 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto relative z-10">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-[var(--spacing-gutter)]">
+        <!-- Medical -->
+        <div class="border border-white/10 p-12 hover:border-white transition-all group h-full flex flex-col justify-between hover:bg-[#1a1a1a]">
+          <div>
+            <div class="mb-12 opacity-50 group-hover:opacity-100 transition-opacity">
+              <span class="material-symbols-outlined text-[48px]">medical_services</span>
+            </div>
+            <h3 class="font-headline-md text-[length:var(--text-headline-md)] text-primary uppercase mb-4">Medical Core</h3>
+            <p class="text-on-surface-variant mb-8 font-body-md text-[length:var(--text-body-md)]">Gestión de expedientes clínicos, recetas digitales y agendas multi-consultorio con cumplimiento normativo.</p>
+          </div>
+          <div class="font-label-caps text-[length:var(--text-label-caps)] border-t border-white/5 pt-6 text-on-surface-variant">SOLUCIÓN CLÍNICA</div>
+        </div>
+
+        <!-- Vet -->
+        <div class="border border-white/10 p-12 hover:border-white transition-all group h-full flex flex-col justify-between hover:bg-[#1a1a1a]">
+          <div>
+            <div class="mb-12 opacity-50 group-hover:opacity-100 transition-opacity">
+              <span class="material-symbols-outlined text-[48px]">pets</span>
+            </div>
+            <h3 class="font-headline-md text-[length:var(--text-headline-md)] text-primary uppercase mb-4">Vet Architecture</h3>
+            <p class="text-on-surface-variant mb-8 font-body-md text-[length:var(--text-body-md)]">Seguimiento de pacientes peludos, recordatorios de vacunación y control de inventario médico veterinario.</p>
+          </div>
+          <div class="font-label-caps text-[length:var(--text-label-caps)] border-t border-white/5 pt-6 text-on-surface-variant">GESTIÓN VETERINARIA</div>
+        </div>
+
+        <!-- General -->
+        <div class="border border-white/10 p-12 hover:border-white transition-all group h-full flex flex-col justify-between hover:bg-[#1a1a1a]">
+          <div>
+            <div class="mb-12 opacity-50 group-hover:opacity-100 transition-opacity">
+              <span class="material-symbols-outlined text-[48px]">business_center</span>
+            </div>
+            <h3 class="font-headline-md text-[length:var(--text-headline-md)] text-primary uppercase mb-4">General Engine</h3>
+            <p class="text-on-surface-variant mb-8 font-body-md text-[length:var(--text-body-md)]">Sistemas versátiles para salones, talleres o asesorías que requieren un flujo de clientes impecable.</p>
+          </div>
+          <div class="font-label-caps text-[length:var(--text-label-caps)] border-t border-white/5 pt-6 text-on-surface-variant">SERVICIOS GENERALES</div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Modular Features -->
+    <section class="py-40 bg-[var(--color-surface-container-lowest)] border-y border-white/5 relative z-10">
+      <div class="px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto">
+        <div class="flex flex-col md:flex-row justify-between items-end mb-24 gap-8">
+          <h2 class="font-headline-lg text-[length:var(--text-headline-lg)] text-primary uppercase max-w-xl">
+            Personaliza tu Sistema
+          </h2>
+          <p class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant max-w-xs text-right">
+            CADA MÓDULO ESTÁ DISEÑADO PARA INTEGRARSE SIN FRICCIÓN EN TU FLUJO DE TRABAJO ACTUAL.
+          </p>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-[var(--spacing-gutter)]">
+          <!-- Feature 1 -->
+          <div class="relative overflow-hidden group border border-white/10 p-8 aspect-square flex flex-col justify-end hover:border-primary transition-colors">
+            <div class="absolute top-8 left-8">
+              <span class="material-symbols-outlined text-primary text-[32px]">chat</span>
+            </div>
+            <div>
+              <h4 class="font-label-caps text-[length:var(--text-label-caps)] mb-2 text-primary">RECORDATORIOS WHATSAPP</h4>
+              <p class="text-on-surface-variant text-sm font-body-md">Automatización de avisos para reducir el absentismo hasta en un 40%.</p>
+            </div>
+          </div>
+          <!-- Feature 2 -->
+          <div class="relative overflow-hidden group border border-white/10 p-8 aspect-square flex flex-col justify-end hover:border-primary transition-colors">
+            <div class="absolute top-8 left-8">
+              <span class="material-symbols-outlined text-primary text-[32px]">folder_shared</span>
+            </div>
+            <div>
+              <h4 class="font-label-caps text-[length:var(--text-label-caps)] mb-2 text-primary">HISTORIAL CLÍNICO</h4>
+              <p class="text-on-surface-variant text-sm font-body-md">Acceso centralizado a documentos, imágenes y notas de evolución.</p>
+            </div>
+          </div>
+          <!-- Feature 3 -->
+          <div class="relative overflow-hidden group border border-white/10 p-8 aspect-square flex flex-col justify-end hover:border-primary transition-colors">
+            <div class="absolute top-8 left-8">
+              <span class="material-symbols-outlined text-primary text-[32px]">video_chat</span>
+            </div>
+            <div>
+              <h4 class="font-label-caps text-[length:var(--text-label-caps)] mb-2 text-primary">TELEMEDICINA</h4>
+              <p class="text-on-surface-variant text-sm font-body-md">Consultas remotas integradas con video HD y cifrado de punta a punta.</p>
+            </div>
+          </div>
+          <!-- Feature 4 -->
+          <div class="relative overflow-hidden group border border-white/10 p-8 aspect-square flex flex-col justify-end hover:border-primary transition-colors">
+            <div class="absolute top-8 left-8">
+              <span class="material-symbols-outlined text-primary text-[32px]">payments</span>
+            </div>
+            <div>
+              <h4 class="font-label-caps text-[length:var(--text-label-caps)] mb-2 text-primary">PAGOS ONLINE</h4>
+              <p class="text-on-surface-variant text-sm font-body-md">Reserva con anticipo mediante Stripe, PayPal o transferencia directa.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="py-40 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto relative z-10">
+      <div class="text-center mb-24">
+        <span class="text-on-surface-variant font-label-caps text-[length:var(--text-label-caps)] mb-4 block">INVESTMENT STRUCTURE</span>
+        <h2 class="font-headline-lg text-[length:var(--text-headline-lg)] text-primary uppercase">Escalabilidad Garantizada</h2>
+      </div>
+      
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-[var(--spacing-margin-desktop)] max-w-4xl mx-auto">
+        <!-- Monthly -->
+        <div class="border border-white/10 p-12 flex flex-col items-center text-center hover:bg-[var(--color-surface-container-low)] transition-colors">
+          <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant mb-6 uppercase">Mensual</span>
+          <div class="font-headline-lg text-[length:var(--text-headline-lg)] mb-4 text-primary">$49<span class="text-lg font-body-md text-on-surface-variant">/mo</span></div>
+          <ul class="flex flex-col gap-4 text-on-surface-variant mb-12 font-body-md text-[length:var(--text-body-md)]">
+            <li>Hasta 500 Citas/mes</li>
+            <li>Gestión de 2 Consultorios</li>
+            <li>Soporte vía Ticket</li>
+            <li>Actualizaciones Core</li>
+          </ul>
+          <button class="w-full py-4 border border-white font-label-caps text-[length:var(--text-label-caps)] hover:bg-white hover:text-[var(--color-background)] transition-all">
+            SELECCIONAR PLAN
+          </button>
+        </div>
+        <!-- Yearly -->
+        <div class="bg-white text-[var(--color-background)] p-12 flex flex-col items-center text-center relative hover:scale-105 transition-transform duration-500">
+          <div class="absolute top-4 right-4 bg-black text-white px-3 py-1 text-[10px] font-label-caps">-20% AHORRO</div>
+          <span class="font-label-caps text-[length:var(--text-label-caps)] opacity-60 mb-6 uppercase">Anual</span>
+          <div class="font-headline-lg text-[length:var(--text-headline-lg)] mb-4">$470<span class="text-lg font-body-md opacity-60">/yr</span></div>
+          <ul class="flex flex-col gap-4 opacity-70 mb-12 font-body-md text-[length:var(--text-body-md)] text-[var(--color-background)]">
+            <li>Citas Ilimitadas</li>
+            <li>Consultorios Ilimitados</li>
+            <li>Soporte Prioritario 24/7</li>
+            <li>Todos los Módulos Incluidos</li>
+          </ul>
+          <button class="w-full py-4 bg-black text-white font-label-caps text-[length:var(--text-label-caps)] hover:opacity-80 transition-all">
+            EMPEZAR AHORA
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="relative py-40 border-t border-white/10 overflow-hidden z-10">
+      <div class="px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto text-center relative z-10">
+        <h2 class="font-display-lg-mobile md:font-display-lg text-[length:var(--text-display-lg-mobile)] md:text-[length:var(--text-display-lg)] uppercase mb-12 text-primary">
+          RESERVA TU DEMO
+        </h2>
+        <div class="flex flex-col md:flex-row gap-6 justify-center">
+          <button class="bg-primary text-[var(--color-on-primary)] px-12 py-5 font-label-caps text-[length:var(--text-label-caps)] hover:opacity-90">
+            AGENDAR CONSULTA GRATUITA
+          </button>
+          <button class="border border-white/20 px-12 py-5 font-label-caps text-[length:var(--text-label-caps)] hover:border-white transition-colors">
+            VER DOCUMENTACIÓN
+          </button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <Footer />
+</Layout>
+
+<style>
+  .grid-line {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.05);
+    z-index: 0;
+  }
+  .v-line { width: 1px; height: 100%; top: 0; }
+  .h-line { height: 1px; width: 100%; left: 0; }
+</style>
