@@ -5,30 +5,29 @@ import Footer from "../../components/Footer.astro";
 
 // 1. Array de Módulos para Desarrollo Web (Cliente Final)
 const modules = [
-  { id: "dashboard", title: "Panel de Métricas", description: "Vista de visitas mensuales, rendimiento y estado del sitio.", icono: "dashboard", price: 0 },
-  { id: "landing", title: "Landing Page", description: "Diseño de una sola página orientada a captura de leads o ventas.", icono: "web", price: 80 },
-  { id: "portafolio", title: "Catálogo / Portafolio", description: "Gestor de contenido para subir proyectos, fotos o servicios.", icono: "collections", price: 100 },
-  { id: "ecommerce", title: "E-Commerce", description: "Carrito de compras, pasarela de pago y gestión de inventario.", icono: "shopping_cart", price: 180 },
-  { id: "hosting", title: "Hosting Premium & SSL", description: "Alojamiento en la nube, certificado de seguridad y dominio.", icono: "dns", price: 40 },
-  { id: "seo", title: "SEO y Analytics", description: "Optimización para Google y reportes de tráfico de usuarios.", icono: "query_stats", price: 50 },
-  { id: "mantenimiento", title: "Mantenimiento Web", description: "Actualizaciones de sistema, parches de seguridad y respaldos.", icono: "update", price: 60 },
-  { id: "soporte", title: "Soporte Prioritario", description: "Asistencia directa, cambios menores y tickets de ayuda.", icono: "support_agent", price: 40 },
+  { id: "landing", title: "Landing Page", description: "Diseño de una sola página orientada a captura de leads o ventas.", icono: "web", price: 1500 },
+  { id: "pagina", title: "Página Web", description: "Sitio web con múltiples páginas (Nosotros, Contacto, Servicios, etc).", icono: "collections", price: 2500 },
+  { id: "ecommerce", title: "E-Commerce", description: "Carrito de compras, pasarela de pago y gestión de inventario.", icono: "shopping_cart", price: 5000 },
+  { id: "basico", title: "Hosting Básico", description: "Alojamiento en la nube sin dominio (solo Landing Page y Página Web).", icono: "dns", price: 199 },
+  { id: "avanzado", title: "Hosting Avanzado", description: "Alojamiento en la nube con dominio gratuito incluido.", icono: "dns", price: 299 },
+  { id: "mantenimiento", title: "Mantenimiento Web", description: "Actualizaciones de sistema, parches de seguridad y respaldos.", icono: "update", price: 250 },
+  { id: "soporte", title: "Soporte Prioritario", description: "Asistencia directa, cambios menores y tickets de ayuda.", icono: "support_agent", price: 199 },
 ];
 
 const pricingPlans = [
   {
     tag: "01 / BÁSICO",
     name: "STARTUP LANDING",
-    developPrice: 1000,
-    monthlyPrice: 90,
-    yearlyPrice: 72,
+    developPrice: 1500,
+    monthlyPrice: 199,
+    yearlyPrice: 159,
     isPopular: false,
     features: [
       "Landing Page (One-Page)",
-      "Hosting y Dominio incluido",
+      "Hosting + Dominio incluido",
       "Formulario de Contacto",
       "Diseño Responsivo",
-      "Soporte vía email"
+      "Soporte vía email (48h)",
     ],
     buttonText: "Seleccionar",
     style: "secondary",
@@ -36,16 +35,17 @@ const pricingPlans = [
   {
     tag: "02 / PROFESIONAL",
     name: "WEB CORPORATIVA",
-    developPrice: 2000,
-    monthlyPrice: 190,
-    yearlyPrice: 152,
+    developPrice: 2500,
+    monthlyPrice: 349,
+    yearlyPrice: 279,
     isPopular: true,
     features: [
-      "Múltiples Páginas (Nosotros, Servicios)",
+      "Múltiples Páginas (Nosotros, Servicios, Contacto)",
       "Portafolio o Blog administrable",
-      "Optimización SEO Básica",
+      "SEO Básico On-Page",
+      "Hosting + Dominio incluido",
       "Mantenimiento Mensual",
-      "Soporte Técnico Rápido"
+      "Soporte Técnico (24h)",
     ],
     buttonText: "Comenzar Ahora",
     style: "primary",
@@ -54,16 +54,17 @@ const pricingPlans = [
     tag: "03 / NEGOCIOS",
     name: "TIENDA ONLINE MAX",
     developPrice: 5000,
-    monthlyPrice: 350, 
-    yearlyPrice: 280,
+    monthlyPrice: 599,
+    yearlyPrice: 479,
     isPopular: false,
     features: [
-      "Sistema de E-Commerce Completo",
-      "Carga de Productos Ilimitados",
+      "E-Commerce Completo",
+      "Productos Ilimitados",
       "Pagos con Tarjeta y PayPal",
-      "Analítica Avanzada de Ventas",
+      "Analítica de Ventas",
+      "Hosting + Dominio incluido",
       "Mantenimiento y Respaldos Diarios",
-      "Soporte VIP 24/7"
+      "Soporte VIP (respuesta en horas)",
     ],
     buttonText: "Seleccionar",
     style: "secondary",
@@ -105,8 +106,8 @@ const pricingPlans = [
     get currentTotal() {
       // Diccionario de precios
       const precios = {
-        dashboard: 0, landing: 80, portafolio: 100, ecommerce: 180,
-        hosting: 40, seo: 50, mantenimiento: 60, soporte: 40
+        landing: 1500, pagina: 2500, ecommerce: 5000, basico: 150,
+        avanzado: 250, mantenimiento: 200, mantenimiento: 150, soporte: 150
       };
       return this.selectedModules.reduce((sum, id) => sum + (precios[id] || 0), 0);
     }
