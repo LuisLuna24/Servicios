@@ -7,10 +7,46 @@ interface Props {
 }
 
 const { title } = Astro.props;
+
+// 1. Netlify en producción inyecta x-country
+let country = Astro.request.headers.get("x-country");
+
+// 2. Fallback para desarrollo local: detección por IP vía servidor
+if (!country) {
+	try {
+		const ip =
+			Astro.request.headers
+				.get("x-forwarded-for")
+				?.split(",")[0]
+				.trim() || Astro.request.headers.get("x-real-ip");
+
+		if (ip && ip !== "127.0.0.1" && ip !== "::1") {
+			const res = await fetch(`https://ipapi.co/${ip}/country/`);
+			country = (await res.text()).trim();
+		}
+	} catch (e) {
+		// silencioso
+	}
+}
+
+// 3. Si sigue sin detectar (localhost puro), leer la cabecera Accept-Language
+if (!country) {
+	const lang = Astro.request.headers.get("accept-language") || "";
+	// MX suele mandar es-MX o es-419
+	if (
+		lang.toLowerCase().includes("es-mx") ||
+		lang.toLowerCase().includes("es-419")
+	) {
+		country = "MX";
+	}
+}
+
+// 4. Default
+country = country || "US";
 ---
 
 <!doctype html>
-<html class="dark" lang="es">
+<html class="dark" lang="es" data-country={country}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0" />

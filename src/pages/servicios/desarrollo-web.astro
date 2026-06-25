@@ -3,22 +3,22 @@ import Layout from "../../layouts/Layout.astro";
 import Navbar from "../../components/Navbar.astro";
 import Footer from "../../components/Footer.astro";
 
-// 1. Array de Módulos para Desarrollo Web (Cliente Final)
 const modules = [
-  { id: "dashboard", title: "Panel de Métricas", description: "Vista de visitas mensuales, rendimiento y estado del sitio.", icono: "dashboard", price: 0 },
-  { id: "landing", title: "Landing Page", description: "Diseño de una sola página orientada a captura de leads o ventas.", icono: "web", price: 80 },
-  { id: "portafolio", title: "Catálogo / Portafolio", description: "Gestor de contenido para subir proyectos, fotos o servicios.", icono: "collections", price: 100 },
-  { id: "ecommerce", title: "E-Commerce", description: "Carrito de compras, pasarela de pago y gestión de inventario.", icono: "shopping_cart", price: 180 },
-  { id: "hosting", title: "Hosting Premium & SSL", description: "Alojamiento en la nube, certificado de seguridad y dominio.", icono: "dns", price: 40 },
-  { id: "seo", title: "SEO y Analytics", description: "Optimización para Google y reportes de tráfico de usuarios.", icono: "query_stats", price: 50 },
-  { id: "mantenimiento", title: "Mantenimiento Web", description: "Actualizaciones de sistema, parches de seguridad y respaldos.", icono: "update", price: 60 },
-  { id: "soporte", title: "Soporte Prioritario", description: "Asistencia directa, cambios menores y tickets de ayuda.", icono: "support_agent", price: 40 },
+  { id: "dashboard", title: "Panel de Métricas", description: "Vista de visitas mensuales, rendimiento y estado del sitio.", icono: "dashboard", priceMXN: 0 },
+  { id: "landing", title: "Landing Page", description: "Diseño de una sola página orientada a captura de leads o ventas.", icono: "web", priceMXN: 1500 },
+  { id: "portafolio", title: "Catálogo / Portafolio", description: "Gestor de contenido para subir proyectos, fotos o servicios.", icono: "collections", priceMXN: 1850 },
+  { id: "ecommerce", title: "E-Commerce", description: "Carrito de compras, pasarela de pago y gestión de inventario.", icono: "shopping_cart", priceMXN: 3300 },
+  { id: "hosting", title: "Hosting Premium & SSL", description: "Alojamiento en la nube, certificado de seguridad y dominio.", icono: "dns", priceMXN: 740 },
+  { id: "seo", title: "SEO y Analytics", description: "Optimización para Google y reportes de tráfico de usuarios.", icono: "query_stats", priceMXN: 925 },
+  { id: "mantenimiento", title: "Mantenimiento Web", description: "Actualizaciones de sistema, parches de seguridad y respaldos.", icono: "update", priceMXN: 1110 },
+  { id: "soporte", title: "Soporte Prioritario", description: "Asistencia directa, cambios menores y tickets de ayuda.", icono: "support_agent", priceMXN: 740 },
 ];
 
 const pricingPlans = [
   {
     tag: "01 / BÁSICO",
     name: "STARTUP LANDING",
+    developPrice: 1500,
     monthlyPrice: 90,
     yearlyPrice: 72,
     isPopular: false,
@@ -35,6 +35,7 @@ const pricingPlans = [
   {
     tag: "02 / PROFESIONAL",
     name: "WEB CORPORATIVA",
+    developPrice: 2500,
     monthlyPrice: 190,
     yearlyPrice: 152,
     isPopular: true,
@@ -51,7 +52,8 @@ const pricingPlans = [
   {
     tag: "03 / NEGOCIOS",
     name: "TIENDA ONLINE MAX",
-    monthlyPrice: 350, 
+    developPrice: 5000,
+    monthlyPrice: 350,
     yearlyPrice: 280,
     isPopular: false,
     features: [
@@ -66,51 +68,142 @@ const pricingPlans = [
     style: "secondary",
   },
 ];
+
+// Tipo de cambio de referencia (ajusta según necesites)
+const MXN_TO_USD_RATE = 18.5;
 ---
 
 <Layout title="Planes de Desarrollo Web | WEBCRAFT">
   <Navbar />
-  
-  <div x-data="{ 
-    isYearly: false, 
-    selectedModules: [], 
-    showAlert: false,
-    alertPlanName: '',
-    proAlertShown: false,
-    masterAlertShown: false,
-    
-    toggleModule(id) {
-      if (this.selectedModules.includes(id)) {
-        this.selectedModules = this.selectedModules.filter(m => m !== id);
-      } else {
-        this.selectedModules.push(id);
-        
-        let total = this.currentTotal;
-        
-        // Alerta inteligente para escalar al cliente a un mejor paquete
-        if (total >= 350 && !this.masterAlertShown) {
-          this.alertPlanName = 'TIENDA ONLINE MAX';
-          this.showAlert = true;
-          this.masterAlertShown = true;
-        } else if (total >= 190 && total < 350 && !this.proAlertShown) {
-          this.alertPlanName = 'WEB CORPORATIVA';
-          this.showAlert = true;
-          this.proAlertShown = true;
-        }
-      }
-    },
-    get currentTotal() {
-      // Diccionario de precios
-      const precios = {
-        dashboard: 0, landing: 80, portafolio: 100, ecommerce: 180,
-        hosting: 40, seo: 50, mantenimiento: 60, soporte: 40
-      };
-      return this.selectedModules.reduce((sum, id) => sum + (precios[id] || 0), 0);
-    }
-  }" class="min-h-screen pt-20">
 
-    <div 
-      x-show="showAlert" 
+  <div
+    x-data="{
+      isYearly: false,
+      selectedModules: [],
+      showAlert: false,
+      alertPlanName: '',
+      proAlertShown: false,
+      masterAlertShown: false,
+
+      isMX: false,
+      currency: 'USD',
+      rate: 18.5,
+
+      async init() {
+        // 1. Netlify Edge: atributo data-country en <html>
+        const netlifyCountry = document.documentElement.getAttribute('data-country');
+        if (netlifyCountry) {
+          this.setLocale(netlifyCountry);
+          return;
+        }
+
+        // 2. Fallback encadenado con múltiples APIs
+        const country = await this.detectCountry();
+        this.setLocale(country);
+      },
+
+      async detectCountry() {
+        // API 1: ipapi.co
+        try {
+          const res = await fetch('https://ipapi.co/json/', { signal: AbortSignal.timeout(4000) });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.country_code) return data.country_code;
+          }
+        } catch (e) {}
+
+        // API 2: ip-api.com (sin HTTPS en plan free, usamos el de json)
+        try {
+          const res = await fetch('http://ip-api.com/json/?fields=countryCode', { signal: AbortSignal.timeout(4000) });
+          if (res.ok) {
+            const data = await res.json();
+            if (data.countryCode) return data.countryCode;
+          }
+        } catch (e) {}
+
+        // API 3: Cloudflare trace (sin clave, muy confiable)
+        try {
+          const res = await fetch('https://cloudflare.com/cdn-cgi/trace', { signal: AbortSignal.timeout(4000) });
+          if (res.ok) {
+            const text = await res.text();
+            const match = text.match(/loc=([A-Z]{2})/);
+            if (match) return match[1];
+          }
+        } catch (e) {}
+
+        // Sin detección → queda en USD por defecto
+        return 'US';
+      },
+
+      setLocale(countryCode) {
+        this.isMX = countryCode === 'MX';
+        this.currency = this.isMX ? 'MXN' : 'USD';
+      },
+
+      // developPrice y priceMXN del cotizador están en MXN.
+      // monthlyPrice / yearlyPrice de los planes están en USD.
+      formatDev(mxnPrice) {
+        if (this.isMX) {
+          return '$' + mxnPrice.toLocaleString('es-MX') + ' MXN';
+        }
+        return '$' + Math.round(mxnPrice / this.rate).toLocaleString('en-US') + ' USD';
+      },
+
+      // monthlyPrice y yearlyPrice ya están en USD
+      formatMonthly(usdPrice) {
+        if (this.isMX) {
+          return '$' + Math.round(usdPrice * this.rate).toLocaleString('es-MX') + ' MXN';
+        }
+        return '$' + usdPrice.toLocaleString('en-US') + ' USD';
+      },
+
+      toggleModule(id) {
+        if (this.selectedModules.includes(id)) {
+          this.selectedModules = this.selectedModules.filter(m => m !== id);
+        } else {
+          this.selectedModules.push(id);
+          const totalMXN = this.currentTotalMXN;
+          const threshold190MXN = Math.round(190 * this.rate);
+          const threshold350MXN = Math.round(350 * this.rate);
+          if (totalMXN >= threshold350MXN && !this.masterAlertShown) {
+            this.alertPlanName = 'TIENDA ONLINE MAX';
+            this.showAlert = true;
+            this.masterAlertShown = true;
+          } else if (totalMXN >= threshold190MXN && totalMXN < threshold350MXN && !this.proAlertShown) {
+            this.alertPlanName = 'WEB CORPORATIVA';
+            this.showAlert = true;
+            this.proAlertShown = true;
+          }
+        }
+      },
+
+      get currentTotalMXN() {
+        const precios = {
+          dashboard: 0, landing: 1500, portafolio: 1850, ecommerce: 3300,
+          hosting: 740, seo: 925, mantenimiento: 1110, soporte: 740
+        };
+        return this.selectedModules.reduce((sum, id) => sum + (precios[id] || 0), 0);
+      },
+
+      get currentTotalDisplay() {
+        if (this.isMX) {
+          return '$' + this.currentTotalMXN.toLocaleString('es-MX') + ' MXN';
+        }
+        return '$' + Math.round(this.currentTotalMXN / this.rate).toLocaleString('en-US') + ' USD';
+      },
+
+      formatModulePrice(mxnPrice) {
+        if (mxnPrice === 0) return 'Incluido';
+        if (this.isMX) return '+ $' + mxnPrice.toLocaleString('es-MX') + ' MXN';
+        return '+ $' + Math.round(mxnPrice / this.rate).toLocaleString('en-US') + ' USD';
+      }
+    }"
+    class="min-h-screen pt-20"
+  >
+
+    <!-- Modal alerta inteligente -->
+    <div
+      x-show="showAlert"
       x-transition.opacity
       class="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-sm p-4"
       x-cloak
@@ -125,17 +218,20 @@ const pricingPlans = [
           <button @click="showAlert = false" class="bg-primary text-[var(--color-surface)] py-3 font-label-caps text-xs uppercase hover:opacity-90 transition-all">
             Seguir armando a mi medida
           </button>
-          <button @click="showAlert = false; document.getElementById('pricing-section').scrollIntoView({behavior: 'smooth'})" class="border border-white/20 hover:bg-white hover:text-black py-3 font-label-caps text-xs uppercase transition-all">
+          <button
+            @click="showAlert = false; document.getElementById('pricing-section').scrollIntoView({behavior: 'smooth'})"
+            class="border border-white/20 hover:bg-white hover:text-black py-3 font-label-caps text-xs uppercase transition-all"
+          >
             Ver paquetes estructurados
           </button>
         </div>
       </div>
     </div>
-    
+
     <main>
+      <!-- Hero -->
       <section class="relative pt-32 pb-20 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto overflow-hidden">
         <div class="absolute -top-20 -right-20 w-96 h-96 bg-primary/5 blur-[120px] rounded-full"></div>
-
         <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div class="max-w-4xl">
             <span class="font-label-caps text-[length:var(--text-label-caps)] text-on-surface-variant mb-4 block">
@@ -145,7 +241,6 @@ const pricingPlans = [
               PRESENCIA DIGITAL &amp;<br />E-COMMERCE
             </h1>
           </div>
-
           <div class="max-w-xs text-right hidden md:block">
             <p class="font-body-md text-[length:var(--text-body-md)] text-on-surface-variant">
               CONSTRUIMOS SOLUCIONES ESCALABLES PARA TU MARCA. DESDE LANDING PAGES RÁPIDAS HASTA TIENDAS ONLINE COMPLETAS.
@@ -154,21 +249,22 @@ const pricingPlans = [
         </div>
       </section>
 
-      <section id="pricing-section" class="px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto mb-40">
-        
+      <!-- Pricing -->
+      <section
+        id="pricing-section"
+        class="px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] max-w-[var(--spacing-container-max)] mx-auto mb-40"
+      >
         <div class="flex justify-center mb-16">
           <div class="flex items-center gap-4 bg-[var(--color-surface-container-low)] p-2 rounded-lg border border-white/5">
-            <span class="font-label-caps text-[length:var(--text-label-caps)]" :class="!isYearly ? 'text-primary' : 'text-on-surface-variant'">
+            <span class="font-label-caps text-[length:var(--text-label-caps)] transition-colors" :class="!isYearly ? 'text-primary' : 'text-on-surface-variant'">
               MENSUAL
             </span>
-
             <label class="relative inline-flex items-center cursor-pointer">
               <input type="checkbox" x-model="isYearly" class="sr-only peer" />
               <div class="w-11 h-6 bg-[var(--color-surface-variant)] rounded-full peer-checked:bg-primary transition-colors"></div>
               <div class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform" :class="isYearly ? 'translate-x-5' : ''"></div>
             </label>
-
-            <span class="font-label-caps text-[length:var(--text-label-caps)]" :class="isYearly ? 'text-primary' : 'text-on-surface-variant'">
+            <span class="font-label-caps text-[length:var(--text-label-caps)] transition-colors" :class="isYearly ? 'text-primary' : 'text-on-surface-variant'">
               ANUAL (AHORRA 20%)
             </span>
           </div>
@@ -178,7 +274,9 @@ const pricingPlans = [
           {pricingPlans.map((plan) => (
             <div
               class={`p-12 flex flex-col h-full transition-colors relative overflow-hidden 
-                ${plan.style === 'primary' ? 'bg-[var(--color-surface-container-low)] hover:bg-[var(--color-surface-container)]' : 'bg-[var(--color-surface)] border-r border-white/5 md:border-r-0 hover:bg-[#1a1a1a]'}`}
+              ${plan.style === 'primary'
+                ? 'bg-[var(--color-surface-container-low)] hover:bg-[var(--color-surface-container)]'
+                : 'bg-[var(--color-surface)] border-r border-white/5 md:border-r-0 hover:bg-[#1a1a1a]'}`}
             >
               {plan.isPopular && (
                 <div class="absolute top-0 right-0 bg-primary text-[var(--color-surface)] px-4 py-1 font-label-caps text-[10px]">
@@ -193,27 +291,51 @@ const pricingPlans = [
                 {plan.name}
               </h3>
 
-              <div class="text-[length:var(--text-display-lg-mobile)] font-headline-md mb-8">
-                <span x-text={`isYearly ? '$${plan.yearlyPrice}' : '$${plan.monthlyPrice}'`}>
-                  ${plan.monthlyPrice}
-                </span>
-                <span class="text-[length:var(--text-label-caps)] text-on-surface-variant font-body-md">/MES</span>
+              <div class="mb-8 flex flex-col gap-4 border-b border-white/10 pb-8">
+                <!-- developPrice en MXN → convierte a USD si es exterior -->
+                <div>
+                  <p class="font-label-caps text-[10px] text-on-surface-variant tracking-wider mb-1">
+                    PAGO ÚNICO POR DESARROLLO
+                  </p>
+                  <div class="text-4xl font-headline-md" x-text={`formatDev(${plan.developPrice})`}>
+                    ${plan.developPrice}
+                  </div>
+                </div>
+
+                <!-- monthlyPrice / yearlyPrice en USD → convierte a MXN si es MX -->
+                <div class="bg-black/20 p-4 rounded-md border border-white/5">
+                  <p class="font-label-caps text-[10px] text-on-surface-variant tracking-wider mb-1">
+                    + HOSTING Y MANTENIMIENTO
+                  </p>
+                  <div
+                    class="text-2xl font-headline-md flex items-baseline gap-1"
+                    :class="isYearly ? 'text-primary' : ''"
+                    x-text={`isYearly ? formatMonthly(${plan.yearlyPrice}) : formatMonthly(${plan.monthlyPrice})`}
+                  >
+                    ${plan.monthlyPrice}
+                  </div>
+                  <p class="text-[11px] text-on-surface-variant/70 mt-1 block" x-show="isYearly" x-cloak>
+                    *Facturado anualmente
+                  </p>
+                </div>
               </div>
 
               <ul class={`space-y-4 mb-12 flex-grow font-body-md text-[length:var(--text-body-md)] ${plan.style === 'primary' ? 'text-on-surface' : 'text-on-surface-variant'}`}>
                 {plan.features.map((feature) => (
-                  <li class="flex items-center gap-2">
-                    <span class={`material-symbols-outlined text-sm ${plan.style === 'primary' ? 'text-primary' : ''}`}>
+                  <li class="flex items-start gap-3">
+                    <span class={`material-symbols-outlined text-sm mt-1 ${plan.style === 'primary' ? 'text-primary' : ''}`}>
                       check
-                    </span> 
-                    {feature}
+                    </span>
+                    <span>{feature}</span>
                   </li>
                 ))}
               </ul>
 
               <button
-                class={`w-full py-4 font-label-caps text-[length:var(--text-label-caps)] transition-all uppercase 
-                  ${plan.style === 'primary' ? 'bg-primary text-[var(--color-surface)] hover:opacity-90' : 'border border-white/20 hover:bg-white hover:text-black'}`}
+                class={`w-full py-4 font-label-caps text-[length:var(--text-label-caps)] transition-all uppercase mt-auto
+                ${plan.style === 'primary'
+                  ? 'bg-primary text-[var(--color-surface)] hover:opacity-90'
+                  : 'border border-white/20 hover:bg-white hover:text-black'}`}
               >
                 {plan.buttonText}
               </button>
@@ -222,6 +344,7 @@ const pricingPlans = [
         </div>
       </section>
 
+      <!-- Cotizador -->
       <section class="px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)] py-32 max-w-[var(--spacing-container-max)] mx-auto border-t border-white/10">
         <div class="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
           <div>
@@ -238,8 +361,8 @@ const pricingPlans = [
             </span>
             <span
               class="font-headline-md text-[length:var(--text-headline-md)] transition-transform duration-200"
-              :class="currentTotal > 0 ? 'scale-110 text-primary' : ''"
-              x-text="`$${currentTotal}`"
+              :class="currentTotalMXN > 0 ? 'scale-110 text-primary' : ''"
+              x-text="currentTotalDisplay"
             >$0</span>
           </div>
         </div>
@@ -255,8 +378,11 @@ const pricingPlans = [
                 <span class="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors">
                   {module.icono}
                 </span>
-                <span class="font-label-caps text-[length:var(--text-label-caps)] opacity-40">
-                  + ${module.price}
+                <span
+                  class="font-label-caps text-[length:var(--text-label-caps)] opacity-40"
+                  x-text={`formatModulePrice(${module.priceMXN})`}
+                >
+                  + ${module.priceMXN}
                 </span>
               </div>
               <h3 class="font-headline-md text-[length:var(--text-headline-md)] mb-4 uppercase">
@@ -266,7 +392,10 @@ const pricingPlans = [
                 {module.description}
               </p>
               <div class="flex justify-between items-center">
-                <span x-text={`selectedModules.includes('${module.id}') ? 'INCLUIDO' : 'AGREGAR'`} class="font-label-caps text-[length:var(--text-label-caps)]">
+                <span
+                  x-text={`selectedModules.includes('${module.id}') ? 'INCLUIDO' : 'AGREGAR'`}
+                  class="font-label-caps text-[length:var(--text-label-caps)]"
+                >
                   AGREGAR
                 </span>
                 <span x-show={`selectedModules.includes('${module.id}')`} class="material-symbols-outlined text-primary" x-cloak>
@@ -278,6 +407,7 @@ const pricingPlans = [
         </div>
       </section>
 
+      <!-- CTA -->
       <section class="mb-40 px-[var(--spacing-margin-mobile)] md:px-[var(--spacing-margin-desktop)]">
         <div class="max-w-[var(--spacing-container-max)] mx-auto bg-primary text-[var(--color-surface)] p-20 text-center relative overflow-hidden">
           <h2 class="font-display-lg-mobile md:font-display-lg text-[length:var(--text-display-lg-mobile)] md:text-[length:var(--text-display-lg)] mb-12 uppercase relative z-10">
@@ -288,10 +418,9 @@ const pricingPlans = [
           </button>
         </div>
       </section>
-
     </main>
   </div>
-  
+
   <Footer />
 </Layout>
 
